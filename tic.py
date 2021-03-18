@@ -6,7 +6,7 @@ board = [
     "4", "5", "6",
     "7", "8", "9"
 ]
-
+playerList = {"X", "O"}
 
 def printGameboard():
     # Print Baoard
@@ -31,37 +31,38 @@ def playerAction():
                 print("Please instert a Number from 1-9")
 
 
-def checkWin(currentPlayer):
+def checkWin():
     winner = "null"
     openSpots = 0
     for i in range(9):
         if board[i] != "X" and board[i] != "O":
             openSpots += 1
 
-    # check row
-    for i in range(0, 9, 3):
-        if board[i] == currentPlayer \
-                and str(board[i + 1]) == currentPlayer \
-                and board[i + 2] == currentPlayer:
-            winner = currentPlayer
-        else:
-            i += 3
-    # check column
-    for i in range(3):
-        if board[i] == currentPlayer \
-                and board[i + 3] == currentPlayer \
-                and board[i + 6] == currentPlayer:
-            winner = currentPlayer
-    # check
-    if board[0] == currentPlayer \
-            and board[4] == currentPlayer \
-            and board[8] == currentPlayer:
-        winner = currentPlayer
+    for player in playerList:
+        # check row
+        for i in range(0, 9, 3):
+            if board[i] == player \
+                    and str(board[i + 1]) == player \
+                    and board[i + 2] == player:
+                winner = player
+            else:
+                i += 3
+        # check column
+        for i in range(3):
+            if board[i] == player \
+                    and board[i + 3] == player \
+                    and board[i + 6] == player:
+                winner = player
+        # check
+        if board[0] == player \
+                and board[4] == player \
+                and board[8] == player:
+            winner = player
 
-    if board[2] == currentPlayer \
-            and board[4] == currentPlayer \
-            and board[6] == currentPlayer:
-        winner = currentPlayer
+        if board[2] == player \
+                and board[4] == player \
+                and board[6] == player:
+            winner = player
 
     if winner == "null" and openSpots == 0:
         return "tie"
@@ -90,7 +91,7 @@ def gamestate():
         printGameboard()
         action = playerAction()
         updateBoard(action, currentPlayer)
-        winner = checkWin(currentPlayer)
+        winner = checkWin()
     if winner == "tie":
         print("The game end with a", winner)
     else:
@@ -99,16 +100,13 @@ def gamestate():
 
 
 def minimax(board, death, isMaximizing):
-    result = checkWin("O")
+    result = checkWin()
     if result != "null":
         return scores[result]
 
-    result = checkWin("X")
-    if result != "null":
-        return scores[result]
 
-    bestScore = 0
     if isMaximizing:
+        bestScore = -100
         for i in range(9):
             # if spot is avainible?
             if board[i] != "X" and board[i] != "O":
@@ -119,6 +117,7 @@ def minimax(board, death, isMaximizing):
 
         return bestScore
     else:
+        bestScore = 100
         for i in range(9):
             # if spot is avainible?
             if board[i] != "X" and board[i] != "O":
@@ -163,7 +162,7 @@ def aigame():
         else:
             action = playerAction()
         updateBoard(action, currentPlayer)
-        winner = checkWin(currentPlayer)
+        winner = checkWin()
     if winner == "tie":
         print("The game end with a", winner)
     else:
@@ -172,7 +171,7 @@ def aigame():
 
 
 print("It starts X")
-game = input("AI or Normal game? Insert AI to play against MiniMax")
+game = input("AI or Normal game? Insert AI to play against MiniMax: ")
 if game == "AI":
     aigame()
 else:
